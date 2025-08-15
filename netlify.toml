@@ -1,5 +1,5 @@
 [build]
-  command = "npx next build"
+  command = "npm run build"
   publish = ".next"
   functions = "netlify/functions"
 
@@ -10,6 +10,11 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 
 
