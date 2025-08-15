@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест Google Apps Script</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Тест Google Apps Script</h1>
+        
+        <div class="test-section info">
+            <h3>📋 Информация</h3>
+            <p><strong>URL:</strong> https://script.google.com/macros/s/AKfycbwipATwxeqb2VqXQBf09OskySdnoX4OJAXsAJTs7nQfqWCtdYZGkdpnP-mQt81QNmb4Ew/exec</p>
+            <p><strong>Цель:</strong> Проверить доступность и работоспособность Google Apps Script</p>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Тест 1: GET запрос (получение лицензий)</h3>
+            <button onclick="testGetRequest()">Запустить GET тест</button>
+            <div id="get-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📤 Тест 2: POST запрос (отправка формы)</h3>
+            <button onclick="testPostRequest()">Запустить POST тест</button>
+            <div id="post-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🌐 Тест 3: CORS проверка</h3>
+            <button onclick="testCORS()">Запустить CORS тест</button>
+            <div id="cors-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Результаты</h3>
+            <div id="summary"></div>
+        </div>
+    </div>
+
+    <script>
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwipATwxeqb2VqXQBf09OskySdnoX4OJAXsAJTs7nQfqWCtdYZGkdpnP-mQt81QNmb4Ew/exec';
+        let testResults = {};
+
+        function logResult(testName, success, data, error) {
+            const resultDiv = document.getElementById(`${testName}-result`);
+            const className = success ? 'success' : 'error';
+            
+            resultDiv.innerHTML = `
+                <div class="${className}">
+                    <h4>${success ? '✅ Успех' : '❌ Ошибка'}</h4>
+                    ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
+                    ${error ? `<p><strong>Ошибка:</strong> ${error}</p>` : ''}
+                </div>
+            `;
+
+            testResults[testName] = { success, data, error };
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const summaryDiv = document.getElementById('summary');
+            const totalTests = Object.keys(testResults).length;
+            const passedTests = Object.values(testResults).filter(r => r.success).length;
+            
+            summaryDiv.innerHTML = `
+                <div class="info">
+                    <h4>📊 Итого: ${passedTests}/${totalTests} тестов прошли успешно</h4>
+                    <ul>
+                        ${Object.entries(testResults).map(([name, result]) => 
+                            `<li>${name}: ${result.success ? '✅' : '❌'} ${result.error || 'OK'}</li>`
+                        ).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        async function testGetRequest() {
+            try {
+                console.log('🔄 Тестируем GET запрос...');
+                
+                const response = await fetch(scriptUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors'
+                });
+
+                console.log('📡 Ответ получен:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('📦 Данные:', data);
+                
+                if (data.success) {
+                    logResult('get', true, data);
+                } else {
+                    logResult('get', false, null, data.message || 'Ошибка от сервера');
+                }
+            } catch (error) {
+                console.error('❌ Ошибка GET запроса:', error);
+                logResult('get', false, null, error.message);
+            }
+        }
+
+        async function testPostRequest() {
+            try {
+                console.log('🔄 Тестируем POST запрос...');
+                
+                const testData = {
+                    name: 'Тест Пользователь',
+                    telegram: '@test_user',
+                    remainingLicenses: 200,
+                    ip: 'test-ip',
+                    userAgent: 'Test Browser'
+                };
+
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                    body: JSON.stringify(testData)
+                });
+
+                console.log('📡 Ответ получен:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('📦 Данные:', data);
+                
+                if (data.success) {
+                    logResult('post', true, data);
+                } else {
+                    logResult('post', false, null, data.message || 'Ошибка от сервера');
+                }
+            } catch (error) {
+                console.error('❌ Ошибка POST запроса:', error);
+                logResult('post', false, null, error.message);
+            }
+        }
+
+        async function testCORS() {
+            try {
+                console.log('🔄 Тестируем CORS...');
+                
+                // Пробуем OPTIONS запрос
+                const response = await fetch(scriptUrl, {
+                    method: 'OPTIONS',
+                    mode: 'cors'
+                });
+
+                console.log('📡 CORS ответ:', response.status, response.statusText);
+                
+                const corsHeaders = {
+                    'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
+                    'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
+                    'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
+                };
+
+                console.log('📋 CORS заголовки:', corsHeaders);
+                
+                if (response.status === 200 || response.status === 204) {
+                    logResult('cors', true, corsHeaders);
+                } else {
+                    logResult('cors', false, null, `HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('❌ Ошибка CORS теста:', error);
+                logResult('cors', false, null, error.message);
+            }
+        }
+
+        // Автоматически запускаем тесты при загрузке страницы
+        window.addEventListener('load', () => {
+            console.log('🚀 Страница загружена, готовы к тестированию');
+        });
+    </script>
+</body>
+</html>
