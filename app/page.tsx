@@ -851,7 +851,11 @@ export default function TGStoreLanding() {
             </h1>
             <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8 max-w-3xl mx-auto">
               Продавайте товари та послуги у Telegram, автоматизуйте спілкування з клієнтами за допомогою ШІ та
-              збільшуйте продажі без технічних складнощів.
+              збільшуйте продажі{' '}
+              <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent font-semibold">
+                без технічних складнощів
+              </span>
+              .
             </p>
           </div>
 
@@ -893,7 +897,9 @@ export default function TGStoreLanding() {
                   <div className="flex flex-col sm:flex-row gap-3 text-xs text-gray-600 dark:text-gray-400">
                     <div className="flex items-center justify-center">
                       <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                      <span><strong>Ранній доступ</strong> — готова платформа для створення web магазину з ШІ Агентом</span>
+                      <span><strong>Ранній доступ</strong> — готова платформа для створення web магазину з ШІ Агентом{' '}
+                        <span className="text-green-600 dark:text-green-400 font-medium">без технічних складнощів</span>
+                      </span>
                     </div>
                     <div className="flex items-center justify-center">
                       <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
@@ -902,7 +908,8 @@ export default function TGStoreLanding() {
                   </div>
                   <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200/50 dark:border-green-700/30">
                     <p className="text-xs text-green-700 dark:text-green-300">
-                      💡 <strong>Кастомний запит?</strong> Кнопка "Замовити AI Agent" — це прямий контакт з компанією-розробником для індивідуальних рішень
+                      💡 <strong>Кастомний запит?</strong> Кнопка "Замовити AI Agent" — це прямий контакт з компанією-розробником для індивідуальних рішень{' '}
+                      <span className="font-semibold text-green-800 dark:text-green-200">без технічних складнощів</span>
                     </p>
                     <div className="mt-2 flex items-center justify-center text-xs text-green-600 dark:text-green-400">
                       <span className="mr-2">Наведіть на кнопку для деталей</span>

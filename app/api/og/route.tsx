@@ -108,18 +108,23 @@ export async function GET() {
           Створи інтернет-магазин у Telegram з AI-Агентом
         </div>
 
-        {/* Subtitle */}
-        <div
-          style={{
-            fontSize: '32px',
-            color: 'rgba(255,255,255,0.9)',
-            textAlign: 'center',
-            marginBottom: '40px',
-            maxWidth: '700px',
-          }}
-        >
-          Продавайте товари та послуги автоматично за допомогою ШІ
-        </div>
+                 {/* Subtitle */}
+         <div
+           style={{
+             fontSize: '32px',
+             color: 'rgba(255,255,255,0.9)',
+             textAlign: 'center',
+             marginBottom: '40px',
+             maxWidth: '700px',
+             lineHeight: '1.3',
+           }}
+         >
+           Продавайте товари та послуги автоматично за допомогою ШІ
+           <br />
+           <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '28px' }}>
+             без технічних складнощів
+           </span>
+         </div>
 
         {/* Features */}
         <div
