@@ -305,30 +305,17 @@ export default function TGStoreLanding() {
     }
     
     try {
-      // РЕАЛЬНЫЙ КОД: Загрузка лицензий из Google Apps Script
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbw7QtPdqu30HEiTO8T93sJzw0VHjA0b2UbJZ45jfXK0TrLQ1RyLoPaJ0KS4M8F3Zg1xlw/exec'
-      console.log('📡 Отправляем запрос к прокси:', scriptUrl)
-      
-      // Уменьшаем timeout до 2 секунд для быстрого fallback
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => {
-        console.log('⏰ Таймаут запроса (2 секунды) - переключаемся на fallback')
-        controller.abort()
-      }, 2000) // 2 секунды timeout
+      // Загружаем лицензии через наш API endpoint
+      console.log('📡 Загружаем лицензии через API...')
       
       try {
-        const response = await fetch(scriptUrl, {
+        const response = await fetch('/api/submit', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-          },
-          mode: 'cors',
-          signal: controller.signal,
-          cache: 'no-cache',
-          credentials: 'omit'
+          }
         })
         
-        clearTimeout(timeoutId)
         console.log('✅ Получен ответ:', response.status, response.statusText)
         
         if (!response.ok) {
@@ -347,13 +334,12 @@ export default function TGStoreLanding() {
           setUseFallback(false)
           console.log('🟢 Fallback режим отключен')
         } else {
-          console.warn('⚠️ Ошибка от сервера:', result.message)
+          console.warn('⚠️ Ошибка от API:', result.message)
           setRemainingLicenses(200)
           setUseFallback(true)
-          console.log('🟠 Fallback режим включен (ошибка сервера)')
+          console.log('🟠 Fallback режим включен (ошибка API)')
         }
       } catch (fetchError) {
-        clearTimeout(timeoutId)
         throw fetchError
       }
       
@@ -480,34 +466,21 @@ export default function TGStoreLanding() {
       console.log('🔄 Начинаем отправку формы...')
       console.log('📊 Fallback режим:', useFallback ? 'ВКЛЮЧЕН' : 'ВЫКЛЮЧЕН')
       
-      // Всегда пытаемся отправить данные в Google таблицу напрямую
-      console.log('🟢 Пытаемся отправить данные в Google таблицу напрямую...')
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbw7QtPdqu30HEiTO8T93sJzw0VHjA0b2UbJZ45jfXK0TrLQ1RyLoPaJ0KS4M8F3Zg1xlw/exec'
-      
-      // Добавляем timeout для запроса
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 секунд timeout
+      // Отправляем данные через наш API endpoint
+      console.log('🟢 Отправляем данные через API endpoint...')
       
       try {
-        const response = await fetch(scriptUrl, {
+        const response = await fetch('/api/submit', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          mode: 'cors',
-          signal: controller.signal,
-          cache: 'no-cache',
-          credentials: 'omit',
           body: JSON.stringify({
             name,
             telegram,
-            remainingLicenses,
-            ip: 'client-ip',
-            userAgent: navigator.userAgent
+            remainingLicenses
           })
         })
-
-        clearTimeout(timeoutId)
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
@@ -521,16 +494,15 @@ export default function TGStoreLanding() {
           // Обновляем localStorage
           localStorage.setItem('remainingLicenses', result.remainingLicenses.toString())
           localStorage.setItem('licensesTimestamp', Date.now().toString())
-          toast.success(`Дякуємо, ${name}! Ваша заявка успішно відправлена в таблицю.`)
-          console.log('✅ Данные успешно отправлены в Google таблицу:', result)
+          toast.success(`Дякуємо, ${name}! Ваша заявка успішно відправлена.`)
+          console.log('✅ Данные успешно отправлены через API:', result)
           return
         } else {
-          console.error('❌ Ошибка от сервера:', result.message)
+          console.error('❌ Ошибка от API:', result.message)
           throw new Error(result.message || 'Ошибка отправки данных')
         }
       } catch (error) {
-        clearTimeout(timeoutId)
-        console.warn('⚠️ Не удалось отправить в Google таблицу:', error)
+        console.warn('⚠️ Не удалось отправить через API:', error)
         if (error instanceof Error) {
           console.log('🔍 Детали ошибки:', {
             name: error.name,

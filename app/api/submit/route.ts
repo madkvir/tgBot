@@ -13,22 +13,61 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Здесь должна быть логика сохранения в Google Sheets
-    // Пока что просто возвращаем успешный ответ
-    console.log('Получена заявка:', { name, telegram, remainingLicenses })
+    console.log('📝 Получена заявка:', { name, telegram, remainingLicenses })
 
-    // Имитация обработки
-    const newRemainingLicenses = Math.max(0, (remainingLicenses || 200) - 1)
+    // Отправляем данные в Google Apps Script
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw7QtPdqu30HEiTO8T93sJzw0VHjA0b2UbJZ45jfXK0TrLQ1RyLoPaJ0KS4M8F3Zg1xlw/exec'
+    
+    try {
+      const response = await fetch(scriptUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          telegram,
+          remainingLicenses: remainingLicenses || 200,
+          timestamp: new Date().toISOString(),
+          userAgent: request.headers.get('user-agent') || 'Unknown'
+        })
+      })
 
-    return NextResponse.json({
-      success: true,
-      message: 'Заявка успешно отправлена',
-      remainingLicenses: newRemainingLicenses,
-      timestamp: new Date().toISOString()
-    })
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log('✅ Ответ от Google Apps Script:', result)
+
+      if (result.success) {
+        return NextResponse.json({
+          success: true,
+          message: 'Заявка успешно отправлена',
+          remainingLicenses: result.remainingLicenses,
+          timestamp: new Date().toISOString()
+        })
+      } else {
+        throw new Error(result.message || 'Ошибка от Google Apps Script')
+      }
+
+    } catch (fetchError) {
+      console.error('❌ Ошибка при отправке в Google Apps Script:', fetchError)
+      
+      // Возвращаем ошибку для отладки
+      return NextResponse.json(
+        { 
+          success: false, 
+          message: 'Ошибка при отправке в Google Sheets',
+          error: fetchError instanceof Error ? fetchError.message : 'Неизвестная ошибка',
+          details: 'Проверьте настройки Google Apps Script и доступность таблицы'
+        },
+        { status: 500 }
+      )
+    }
 
   } catch (error) {
-    console.error('Ошибка обработки заявки:', error)
+    console.error('❌ Ошибка обработки заявки:', error)
     return NextResponse.json(
       { 
         success: false, 
@@ -40,11 +79,44 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Функция для получения количества оставшихся лицензий
 export async function GET() {
-  return NextResponse.json({
-    success: true,
-    message: 'API работает',
-    remainingLicenses: 200,
-    timestamp: new Date().toISOString()
-  })
+  try {
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw7QtPdqu30HEiTO8T93sJzw0VHjA0b2UbJZ45jfXK0TrLQ1RyLoPaJ0KS4M8F3Zg1xlw/exec'
+    
+    const response = await fetch(scriptUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('📊 Получены данные о лицензиях:', result)
+
+    if (result.success) {
+      return NextResponse.json({
+        success: true,
+        remainingLicenses: result.remainingLicenses,
+        usedLicenses: result.usedLicenses
+      })
+    } else {
+      throw new Error(result.message || 'Ошибка получения данных')
+    }
+
+  } catch (error) {
+    console.error('❌ Ошибка получения лицензий:', error)
+    return NextResponse.json(
+      { 
+        success: false, 
+        message: 'Ошибка при получении данных о лицензиях',
+        error: error instanceof Error ? error.message : 'Неизвестная ошибка'
+      },
+      { status: 500 }
+    )
+  }
 }
