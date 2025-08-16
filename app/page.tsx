@@ -28,6 +28,7 @@ import {
   X,
   Gift,
   Loader2,
+  MessageSquare,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -648,6 +649,31 @@ export default function TGStoreLanding() {
                   </span>
                 </div>
               )}
+              
+              {/* Кнопка "Замовити AI Agent" - оптимизированная с заметным Tooltip */}
+              <div className="relative group">
+                <Button
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 py-1.5 px-3 text-xs font-medium active:scale-95 touch-manipulation transition-all duration-200 opacity-90 hover:opacity-100 border border-green-400/30 relative"
+                  onClick={() => window.open('https://t.me/cgg5577', '_blank')}
+                  style={{ minHeight: '36px' }}
+                >
+                  <MessageSquare className="w-3 h-3 mr-1.5" />
+                  Замовити AI Agent
+                  {/* Индикатор Tooltip */}
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                </Button>
+                
+                {/* Заметный Tooltip с улучшенной видимостью - появляется снизу */}
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-700 dark:to-gray-600 text-white text-xs rounded-lg shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap border border-gray-600 dark:border-gray-500">
+                  <div className="text-center">
+                    <div className="font-medium mb-1 text-yellow-300">💡 Кастомний запит?</div>
+                    <div className="text-gray-200">Прямий контакт з компанією-розробником</div>
+                  </div>
+                  {/* Стрелка вверх */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900 dark:border-b-gray-700"></div>
+                </div>
+              </div>
+              
               <Button
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 py-2 px-6 text-base font-semibold active:scale-95 touch-manipulation transition-all duration-200"
                 onClick={() => document.getElementById("contact-form")?.scrollIntoView({ behavior: "smooth" })}
@@ -743,8 +769,35 @@ export default function TGStoreLanding() {
                   </span>
                 </div>
               )}
+              {/* Кнопка "Замовити AI Agent" для мобильных - оптимизированная с Tooltip */}
+              <div className="relative group">
+                <Button
+                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 py-3 text-sm font-medium active:scale-95 touch-manipulation opacity-90 hover:opacity-100 border border-green-400/30 relative"
+                  onClick={() => {
+                    window.open('https://t.me/cgg5577', '_blank')
+                    closeMobileMenu()
+                  }}
+                  style={{ minHeight: '48px' }}
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Замовити AI Agent
+                  {/* Индикатор Tooltip */}
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                </Button>
+                
+                {/* Заметный Tooltip для мобильных с улучшенной видимостью - появляется снизу */}
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-700 dark:to-gray-600 text-white text-xs rounded-lg shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap border border-gray-600 dark:border-gray-500">
+                  <div className="text-center">
+                    <div className="font-medium mb-1 text-yellow-300">💡 Кастомний запит?</div>
+                    <div className="text-gray-200">Прямий контакт з компанією-розробником</div>
+                  </div>
+                  {/* Стрелка вверх */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900 dark:border-b-gray-700"></div>
+                </div>
+              </div>
+              
               <Button
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-6 py-4 text-base font-semibold active:scale-95 touch-manipulation"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4 py-4 text-base font-semibold active:scale-95 touch-manipulation"
                 onClick={() => {
                   document.getElementById("contact-form")?.scrollIntoView({ behavior: "smooth" })
                   closeMobileMenu()
@@ -818,6 +871,34 @@ export default function TGStoreLanding() {
                 remainingLicenses={remainingLicenses}
                 useFallback={useFallback}
               />
+              
+              {/* Пояснительный блок для понимания различий */}
+              <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800/50 dark:to-blue-900/30 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
+                <div className="text-center">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Що оберіть?
+                  </h4>
+                  <div className="flex flex-col sm:flex-row gap-3 text-xs text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center justify-center">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                      <span><strong>Ранній доступ</strong> — готова платформа для створення магазину</span>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                      <span><strong>Замовити AI Agent</strong> — індивідуальна розробка під ваші потреби</span>
+                    </div>
+                  </div>
+                  <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200/50 dark:border-green-700/30">
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      💡 <strong>Кастомний запит?</strong> Кнопка "Замовити AI Agent" — це прямий контакт з компанією-розробником для індивідуальних рішень
+                    </p>
+                    <div className="mt-2 flex items-center justify-center text-xs text-green-600 dark:text-green-400">
+                      <span className="mr-2">Наведіть на кнопку для деталей</span>
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 md:gap-6 text-xs md:text-sm text-gray-500 dark:text-gray-400">
               <div className="flex items-center">
