@@ -888,12 +888,12 @@ export default function TGStoreLanding() {
               <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800/50 dark:to-blue-900/30 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
                 <div className="text-center">
                   <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Що оберіть?
+                    Що обрати?
                   </h4>
                   <div className="flex flex-col sm:flex-row gap-3 text-xs text-gray-600 dark:text-gray-400">
                     <div className="flex items-center justify-center">
                       <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                      <span><strong>Ранній доступ</strong> — готова платформа для створення магазину</span>
+                      <span><strong>Ранній доступ</strong> — готова платформа для створення web магазинуp ШІ Агентом</span>
                     </div>
                     <div className="flex items-center justify-center">
                       <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
