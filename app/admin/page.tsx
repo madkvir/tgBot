@@ -14,7 +14,8 @@ export default function AdminPage() {
 
     setLoading(true)
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbw7QtPdqu30HEiTO8T93sJzw0VHjA0b2UbJZ45jfXK0TrLQ1RyLoPaJ0KS4M8F3Zg1xlw/exec', {
+      // Используем наш API endpoint для сброса счетчика
+      const response = await fetch('/api/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,6 +24,10 @@ export default function AdminPage() {
           resetCounter: true
         })
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
 
       const data = await response.json()
 
@@ -39,11 +44,11 @@ export default function AdminPage() {
           window.location.reload()
         }, 2000)
       } else {
-        toast.error('Ошибка при сбросе счетчика')
+        toast.error(`Ошибка при сбросе счетчика: ${data.message}`)
       }
     } catch (error) {
       console.error('Ошибка:', error)
-      toast.error('Ошибка при сбросе счетчика')
+      toast.error('Ошибка при сбросе счетчика. Проверьте консоль для деталей.')
     } finally {
       setLoading(false)
     }
@@ -52,18 +57,29 @@ export default function AdminPage() {
   const checkLicenses = async () => {
     setLoading(true)
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbw7QtPdqu30HEiTO8T93sJzw0VHjA0b2UbJZ45jfXK0TrLQ1RyLoPaJ0KS4M8F3Zg1xlw/exec')
+      // Используем наш API endpoint для проверки лицензий
+      const response = await fetch('/api/submit', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
       const data = await response.json()
 
       if (data.success) {
         setRemainingLicenses(data.remainingLicenses)
         toast.success(`Осталось лицензий: ${data.remainingLicenses}`)
       } else {
-        toast.error('Ошибка при получении данных')
+        toast.error(`Ошибка при получении данных: ${data.message}`)
       }
     } catch (error) {
       console.error('Ошибка:', error)
-      toast.error('Ошибка при получении данных')
+      toast.error('Ошибка при получении данных. Проверьте консоль для деталей.')
     } finally {
       setLoading(false)
     }
@@ -116,6 +132,14 @@ export default function AdminPage() {
                 <li>• Счетчик вернется к 200 лицензиям</li>
                 <li>• Действие нельзя отменить</li>
               </ul>
+            </div>
+
+            {/* Отладочная информация */}
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-yellow-900 mb-2">🐛 Отладка</h3>
+              <p className="text-yellow-800 text-sm">
+                Если возникают ошибки, проверьте консоль браузера (F12) для детальной информации.
+              </p>
             </div>
           </div>
         </div>
