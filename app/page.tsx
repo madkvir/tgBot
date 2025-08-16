@@ -893,7 +893,7 @@ export default function TGStoreLanding() {
                   <div className="flex flex-col sm:flex-row gap-3 text-xs text-gray-600 dark:text-gray-400">
                     <div className="flex items-center justify-center">
                       <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                      <span><strong>Ранній доступ</strong> — готова платформа для створення web магазинуp ШІ Агентом</span>
+                      <span><strong>Ранній доступ</strong> — готова платформа для створення web магазину з ШІ Агентом</span>
                     </div>
                     <div className="flex items-center justify-center">
                       <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
